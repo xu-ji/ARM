@@ -1,14 +1,12 @@
-import os.path
-import os.path
+from collections import defaultdict
 
 import numpy as np
 import torch
 from torchvision import datasets
 from torchvision.datasets.vision import VisionDataset
 
-from collections import defaultdict
-
 from code.util.general import make_valid_from_train
+
 
 # Reference: https://github.com/optimass/Maximally_Interfered_Retrieval/blob/master/data.py
 # We use 1 dataloader rather than one per task
@@ -36,11 +34,12 @@ class mnist5k(VisionDataset):
     train = datasets.MNIST(root, train=True, download=False)
     test = datasets.MNIST(root, train=False, download=False)
 
-    train_x, train_y = train.data, train.targets # 60000, 28, 28; 60000
+    train_x, train_y = train.data, train.targets  # 60000, 28, 28; 60000
     test_x, test_y = test.data, test.targets
 
     # sort by label
-    train_ds, test_ds = [], [] # doesn't really matter for test_ds because of batchnorm tracking stats
+    train_ds, test_ds = [], []  # doesn't really matter for test_ds because of batchnorm tracking
+    #  stats
     task_i = 0
     current_train, current_test = None, None
     self.task_dict_classes = defaultdict(list)
@@ -50,12 +49,13 @@ class mnist5k(VisionDataset):
       test_i = test_y == i
 
       if current_train is None:
-        current_train, current_test = (train_x[train_i], train_y[train_i]), (test_x[test_i], test_y[test_i])
+        current_train, current_test = (train_x[train_i], train_y[train_i]), (
+        test_x[test_i], test_y[test_i])
       else:
         current_train = (torch.cat((current_train[0], train_x[train_i]), dim=0),
                          torch.cat((current_train[1], train_y[train_i]), dim=0))
         current_test = (torch.cat((current_test[0], test_x[test_i]), dim=0),
-                         torch.cat((current_test[1], test_y[test_i]), dim=0))
+                        torch.cat((current_test[1], test_y[test_i]), dim=0))
 
       if i % self.classes_per_task == (self.classes_per_task - 1):
         train_ds += [current_train]
@@ -68,17 +68,18 @@ class mnist5k(VisionDataset):
 
     # flatten into single list, and truncate training data into 500 per class
     data_summary = {"train": train_ds, "val": val_ds, "test": test_ds}[self.data_type]
-    self.data = [] # list of tensors
+    self.data = []  # list of tensors
     self.targets = []
     counts_per_class = torch.zeros(self.num_classes, dtype=torch.int)
     task_lengths = []
     for task_ds in data_summary:
-      assert(len(task_ds[1]) == len(task_ds[0]))
+      assert (len(task_ds[1]) == len(task_ds[0]))
 
       num_samples_task = 0
       for i in range(len(task_ds[1])):
         target = task_ds[1][i]
-        if self.data_type == "train" and counts_per_class[target] == self.orig_train_samples_per_class:
+        if self.data_type == "train" and counts_per_class[
+          target] == self.orig_train_samples_per_class:
           continue
         else:
           self.data.append(task_ds[0][i])
@@ -93,21 +94,23 @@ class mnist5k(VisionDataset):
     # if stationary, shuffle
     if not self.non_stat:
       perm = np.random.permutation(len(self.data))
-      self.data, self.targets = [self.data[perm_i] for perm_i in perm], [self.targets[perm_i] for perm_i in perm]
+      self.data, self.targets = [self.data[perm_i] for perm_i in perm], [self.targets[perm_i] for
+                                                                         perm_i in perm]
 
     self.orig_len = len(self.data)
     self.actual_len = self.orig_len * self.num_iterations
 
-    if self.non_stat: # we need to care about looping over in task order
-      assert(self.orig_len % self.num_classes == 0)
-      self.orig_samples_per_task = int(self.orig_len / self.num_classes) * self.classes_per_task # equally split among tasks
+    if self.non_stat:  # we need to care about looping over in task order
+      assert (self.orig_len % self.num_classes == 0)
+      self.orig_samples_per_task = int(
+        self.orig_len / self.num_classes) * self.classes_per_task  # equally split among tasks
       self.actual_samples_per_task = self.orig_samples_per_task * self.num_iterations
 
       # sanity
-      if self.data_type == "train": assert(self.orig_samples_per_task == 1000)
+      if self.data_type == "train": assert (self.orig_samples_per_task == 1000)
 
-      print("orig samples per task: %d, actual samples per task: %d" % (self.orig_samples_per_task, self.actual_samples_per_task))
-
+      print("orig samples per task: %d, actual samples per task: %d" % (
+      self.orig_samples_per_task, self.actual_samples_per_task))
 
   def __len__(self):
     return self.actual_len
@@ -123,10 +126,10 @@ class mnist5k(VisionDataset):
       index = task_i * self.orig_samples_per_task + orig_offset
 
     sample, target = self.data[index], self.targets[index]
-    sample = sample.view(-1).float() / 255. # flatten and turn from uint8 (255) -> [0., 1.]
+    sample = sample.view(-1).float() / 255.  # flatten and turn from uint8 (255) -> [0., 1.]
 
-    assert(self.transform is None)
-    assert(self.target_transform is None)
+    assert (self.transform is None)
+    assert (self.target_transform is None)
 
     return sample, target
 

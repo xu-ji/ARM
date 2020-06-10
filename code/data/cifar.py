@@ -1,27 +1,28 @@
 import os
 import os.path
+import pickle
 import sys
 
 import numpy as np
 from PIL import Image
+from code.util.check_data import *
+from torchvision.datasets.vision import VisionDataset
 
 from code.util.general import np_rand_seed
-from code.util.check_data import *
-
-import pickle
-
-from torchvision.datasets.vision import VisionDataset
 
 # Reference: https://github.com/optimass/Maximally_Interfered_Retrieval/blob/master/data.py
 # We use 1 dataloader rather than one per task
 
 __all__ = ["cifar10", "cifar10val"]
 
+
 class cifar(VisionDataset):
   train_pc = 0.95
 
-  def __init__(self, root, num_classes, train=True, transform=None, target_transform=None, non_stat=False,
-               two_classes_per_block=False, is_val=False, shuffle_classes=False, num_iterations=None):
+  def __init__(self, root, num_classes, train=True, transform=None, target_transform=None,
+               non_stat=False,
+               two_classes_per_block=False, is_val=False, shuffle_classes=False,
+               num_iterations=None):
     print("initialising cifar%d, is val: %s..." % (num_classes, is_val))
     super(cifar, self).__init__(root, transform=transform, target_transform=target_transform)
 
@@ -34,10 +35,10 @@ class cifar(VisionDataset):
     self.shuffle_classes = shuffle_classes
 
     self.num_iterations = num_iterations
-    assert(num_iterations is not None)
+    assert (num_iterations is not None)
 
     if self.is_val:
-      assert(self.train)
+      assert (self.train)
 
     if self.train:
       downloaded_list = self.train_list
@@ -65,17 +66,17 @@ class cifar(VisionDataset):
     self.data = self.data.transpose((0, 2, 3, 1))  # convert to HWC
 
     sz = self.data.shape[0]
-    assert(len(self.targets) == sz)
+    assert (len(self.targets) == sz)
 
     # Split train from val deterministically -------------------------------------------------------
 
     if self.train:
       if not self.is_val:
         per_class_sz = int((sz / self.num_classes) * cifar.train_pc)
-        data_inds = range(sz) # from start
+        data_inds = range(sz)  # from start
       else:
         per_class_sz = int((sz / self.num_classes) * (1 - cifar.train_pc))
-        data_inds = reversed(range(sz)) # from back
+        data_inds = reversed(range(sz))  # from back
 
       class_counts = [0 for _ in range(self.num_classes)]
       chosen_inds = []
@@ -84,7 +85,7 @@ class cifar(VisionDataset):
         if class_counts[c] < per_class_sz:
           chosen_inds.append(i)
           class_counts[c] += 1
-      assert(len(chosen_inds) == per_class_sz * self.num_classes)
+      assert (len(chosen_inds) == per_class_sz * self.num_classes)
 
     else:
       chosen_inds = list(range(sz))
@@ -107,14 +108,14 @@ class cifar(VisionDataset):
 
       new_data = []
       new_targets = []
-      if not two_classes_per_block: # classes contiguous
+      if not two_classes_per_block:  # classes contiguous
         for c in range(self.num_classes):
           new_data += per_class[c]
           new_targets += [c] * len(per_class[c])
           self.task_dict_classes[c] = [c]
       else:
         classes = np.arange(self.num_classes)
-        assert(not self.shuffle_classes) # sanity
+        assert (not self.shuffle_classes)  # sanity
         if self.shuffle_classes:
           np.random.seed(np_rand_seed())
           np.random.shuffle(classes)
@@ -123,8 +124,8 @@ class cifar(VisionDataset):
         print("two_classes_per_block: num tasks %d" % num_tasks)
         for t in range(num_tasks):
           inds = [t * 2, t * 2 + 1]
-          if (t * 2 + 1 >= self.num_classes): # odd number of tasks
-            assert(t == num_tasks - 1 and num_tasks % 2 == 1)
+          if (t * 2 + 1 >= self.num_classes):  # odd number of tasks
+            assert (t == num_tasks - 1 and num_tasks % 2 == 1)
             inds = [t * 2]
 
           self.task_dict_classes[t] = [classes[i] for i in inds]
@@ -149,14 +150,17 @@ class cifar(VisionDataset):
     for c in range(num_classes):
       class_lengths.append((targets_np == c).sum())
 
-    print("... finished initialising cifar train %s val %s non stat %s classes %d two_classes_per_block %s iterations %d shuffle %s" %
-          (self.train, self.is_val, self.non_stat, self.num_classes, self.two_classes_per_block, self.num_iterations, self.shuffle_classes))
+    print(
+      "... finished initialising cifar train %s val %s non stat %s classes %d "
+      "two_classes_per_block %s iterations %d shuffle %s" %
+      (self.train, self.is_val, self.non_stat, self.num_classes, self.two_classes_per_block,
+       self.num_iterations, self.shuffle_classes))
 
     self.orig_len = len(self.data)
     self.actual_len = self.orig_len * self.num_iterations
 
-    if self.non_stat: # we need to care about looping over in task order
-      assert(self.orig_len % self.num_classes == 0)
+    if self.non_stat:  # we need to care about looping over in task order
+      assert (self.orig_len % self.num_classes == 0)
 
       self.orig_samples_per_task = int(self.orig_len / self.num_classes)
 
@@ -164,13 +168,14 @@ class cifar(VisionDataset):
         self.orig_samples_per_task *= 2
 
       self.actual_samples_per_task = self.orig_samples_per_task * self.num_iterations
-      print("orig samples per task: %d, actual samples per task: %d, orig len %d actual len %d" % (self.orig_samples_per_task, self.actual_samples_per_task, self.orig_len, self.actual_len))
+      print("orig samples per task: %d, actual samples per task: %d, orig len %d actual len %d" % (
+      self.orig_samples_per_task, self.actual_samples_per_task, self.orig_len, self.actual_len))
 
   def __getitem__(self, index):
-    assert(index < self.actual_len)
+    assert (index < self.actual_len)
 
     if not self.non_stat:
-      index = index % self.orig_len # looping over stationary data is arbitrary
+      index = index % self.orig_len  # looping over stationary data is arbitrary
     else:
       task_i, actual_offset = divmod(index, self.actual_samples_per_task)
       _, orig_offset = divmod(actual_offset, self.orig_samples_per_task)
@@ -208,13 +213,16 @@ class cifar10(cifar):
   test_list = [
     ['test_batch', '40351d587109b95175f43aff81a1287e'],
   ]
+
   def __init__(self, root, train=True, transform=None, target_transform=None, non_stat=None,
                two_classes_per_block=False, is_val=False, num_iterations=None):
-    assert(non_stat is not None)
+    assert (non_stat is not None)
     if not train:
-      assert(num_iterations == 1)
-    super(cifar10, self).__init__(root, num_classes=10, train=train, transform=transform, target_transform=target_transform,
-                                   non_stat=non_stat, two_classes_per_block=two_classes_per_block, is_val=is_val, shuffle_classes=False,
+      assert (num_iterations == 1)
+    super(cifar10, self).__init__(root, num_classes=10, train=train, transform=transform,
+                                  target_transform=target_transform,
+                                  non_stat=non_stat, two_classes_per_block=two_classes_per_block,
+                                  is_val=is_val, shuffle_classes=False,
                                   num_iterations=num_iterations)
 
 

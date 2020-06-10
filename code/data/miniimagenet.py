@@ -1,15 +1,14 @@
 import os.path
 import os.path
-
-import numpy as np
-import torch
-from torchvision.datasets.vision import VisionDataset
-
-from code.util.check_data import *
-from PIL import Image
 from collections import defaultdict
 
+import numpy as np
+from PIL import Image
+from code.util.check_data import *
+from torchvision.datasets.vision import VisionDataset
+
 from code.util.general import make_valid_from_train
+
 
 # Reference: https://github.com/optimass/Maximally_Interfered_Retrieval/blob/master/data.py
 # We use 1 dataloader rather than one per task
@@ -60,7 +59,8 @@ class MiniImagenetDatasetFolder(VisionDataset):
     # splits are deterministic
 
     images_path = os.path.join(root, "images")
-    train_data, train_label = get_data("train", root, images_path)  # zero indexed labels for all calls
+    train_data, train_label = get_data("train", root,
+                                       images_path)  # zero indexed labels for all calls
     valid_data, valid_label = get_data("val", root, images_path)
     test_data, test_label = get_data("test", root, images_path)
 
@@ -72,7 +72,7 @@ class MiniImagenetDatasetFolder(VisionDataset):
     valid_label = [x + train_amt for x in valid_label]
     test_label = [x + train_amt + valid_amt for x in test_label]
 
-    all_data = np.array(train_data + valid_data + test_data) # np array of strings!
+    all_data = np.array(train_data + valid_data + test_data)  # np array of strings!
     all_label = np.array(train_label + valid_label + test_label)
 
     train_ds, test_ds = [], []
@@ -94,7 +94,8 @@ class MiniImagenetDatasetFolder(VisionDataset):
       label_train, label_test = class_label[:split], class_label[split:]
 
       if current_train is None:
-        current_train, current_test = (data_train, label_train), (data_test, label_test) # multiple samples here
+        current_train, current_test = (data_train, label_train), (
+        data_test, label_test)  # multiple samples here
       else:
         current_train = cat(current_train[0], data_train), cat(current_train[1], label_train)
         current_test = cat(current_test[0], data_test), cat(current_test[1], label_test)
@@ -105,7 +106,9 @@ class MiniImagenetDatasetFolder(VisionDataset):
         current_train, current_test = None, None
         task_i += 1
 
-    train_ds, val_ds = make_valid_from_train(train_ds, cut=MiniImagenetDatasetFolder.train_val_pc)  # uses random split, but seed set in main script
+    train_ds, val_ds = make_valid_from_train(train_ds,
+                                             cut=MiniImagenetDatasetFolder.train_val_pc)  # uses
+    # random split, but seed set in main script
 
     # now we have list of list of (path, label), one list per task
     # pick the right source, flatten into one list and load images
@@ -117,7 +120,7 @@ class MiniImagenetDatasetFolder(VisionDataset):
     task_lengths = []
     for task_ds in data_summary:
       num_samples_task = len(task_ds[0])
-      assert(len(task_ds[1]) == num_samples_task)
+      assert (len(task_ds[1]) == num_samples_task)
       task_lengths.append(num_samples_task)
       for i in range(num_samples_task):
         img_path = task_ds[0][i]
@@ -130,29 +133,35 @@ class MiniImagenetDatasetFolder(VisionDataset):
     # if stationary, shuffle
     if not self.non_stat:
       perm = np.random.permutation(len(self.data))
-      self.data, self.targets = [self.data[perm_i] for perm_i in perm], [self.targets[perm_i] for perm_i in perm]
+      self.data, self.targets = [self.data[perm_i] for perm_i in perm], [self.targets[perm_i] for
+                                                                         perm_i in perm]
 
     self.orig_len = len(self.data)
     self.actual_len = self.orig_len * self.num_iterations
 
-    if self.non_stat: # we need to care about looping over in task order
-      assert(self.orig_len % self.num_classes == 0)
-      self.orig_samples_per_task = int(self.orig_len / self.num_classes) * self.classes_per_task # equally split among tasks
+    if self.non_stat:  # we need to care about looping over in task order
+      assert (self.orig_len % self.num_classes == 0)
+      self.orig_samples_per_task = int(
+        self.orig_len / self.num_classes) * self.classes_per_task  # equally split among tasks
 
       self.actual_samples_per_task = self.orig_samples_per_task * self.num_iterations
 
       # sanity
       if self.data_type == "train":
-        assert(self.orig_samples_per_task == (int(600 * MiniImagenetDatasetFolder.train_test_pc * MiniImagenetDatasetFolder.train_val_pc) * self.classes_per_task))
+        assert (self.orig_samples_per_task == (int(
+          600 * MiniImagenetDatasetFolder.train_test_pc * MiniImagenetDatasetFolder.train_val_pc)
+                                               * self.classes_per_task))
 
       if self.data_type == "val":
-        assert(self.orig_samples_per_task == (int(600 * MiniImagenetDatasetFolder.train_test_pc * (1. - MiniImagenetDatasetFolder.train_val_pc)) * self.classes_per_task))
+        assert (self.orig_samples_per_task == (int(600 * MiniImagenetDatasetFolder.train_test_pc * (
+        1. - MiniImagenetDatasetFolder.train_val_pc)) * self.classes_per_task))
 
       if self.data_type == "test":
-        assert(self.orig_samples_per_task == (int(600 * (1. - MiniImagenetDatasetFolder.train_test_pc)) * self.classes_per_task))
+        assert (self.orig_samples_per_task == (
+        int(600 * (1. - MiniImagenetDatasetFolder.train_test_pc)) * self.classes_per_task))
 
-      print("orig samples per task: %d, actual samples per task: %d" % (self.orig_samples_per_task, self.actual_samples_per_task))
-
+      print("orig samples per task: %d, actual samples per task: %d" % (
+      self.orig_samples_per_task, self.actual_samples_per_task))
 
   def __len__(self):
     return self.actual_len

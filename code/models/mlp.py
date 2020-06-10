@@ -1,5 +1,6 @@
-import torch.nn as nn
 import numpy as np
+import torch.nn as nn
+
 
 # Consistent with https://github.com/optimass/Maximally_Interfered_Retrieval
 
