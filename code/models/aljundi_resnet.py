@@ -1,6 +1,6 @@
 from .resnet18 import resnet18, resnet18_batch_stats, BasicBlock
 
-# todo: legacy classes, remove
+# todo: legacy class names are now empty wrappers, remove for final version
 
 class aljundi_resnet(resnet18):
   def __init__(self, config):

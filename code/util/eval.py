@@ -51,12 +51,10 @@ def evaluate_basic(config, tasks_model, data_loader, t, is_val, last_classes=Non
   if not hasattr(config, "%s_accs" % prefix):
     setattr(config, "%s_accs" % prefix, OrderedDict())
     setattr(config, "%s_per_label_accs" % prefix, OrderedDict())
-    setattr(config, "%s_accs_avg_label" % prefix, OrderedDict())
     setattr(config, "%s_forgetting" % prefix, OrderedDict())
 
   getattr(config, "%s_accs" % prefix)[t] = acc
   getattr(config, "%s_per_label_accs" % prefix)[t] = per_label_acc
-  getattr(config, "%s_accs_avg_label" % prefix)[t] = per_label_acc.mean()
 
   if compute_forgetting_metric:
     # for all previous (excl latest) tasks, find the maximum drop to current acc, and average
