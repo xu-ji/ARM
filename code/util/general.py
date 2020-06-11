@@ -28,11 +28,11 @@ def store(config):
   config.out_root = ""
   config.out_dir = ""
 
-  with open(osp.join(config.out_dir, "config.pickle"),
+  with open(osp.join(out_dir, "config.pickle"),
             'wb') as outfile:
     pickle.dump(config, outfile)
 
-  with open(osp.join(config.out_dir, "config.txt"),
+  with open(osp.join(out_dir, "config.txt"),
             "w") as text_file:
     text_file.write("%s" % config)
     

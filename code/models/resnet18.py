@@ -103,11 +103,12 @@ class ResNet(nn.Module):
                                     batchnorm_mom=self.batchnorm_mom,
                                     batchnorm_dont_track=batchnorm_dont_track)
 
-    if self.num_classes == 10: # cifar10
+    if self.num_classes == 10: # cifar10, legacy code
       self.avg_pool = nn.AdaptiveAvgPool2d((1, 1))
 
     self.fc1 = nn.Linear(linear_sz, self.num_classes)
 
+    """
     if init:  # else default, which is uniform
       print("calling _initialise")
       self._initialise()
@@ -115,6 +116,7 @@ class ResNet(nn.Module):
     if batchnorm_init:  # else default, which is all 1s since 1.2
       print("calling _batchnorm_initialise")
       self._batchnorm_initialise()
+    """
 
   def _initialise(self):
     for m in self.modules():
