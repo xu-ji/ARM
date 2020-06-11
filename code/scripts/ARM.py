@@ -143,7 +143,6 @@ def main(config):
   config.out_dir = osp.join(config.out_root, str(config.model_ind))
 
   set_task_dims(config)
-  print((config.task_in_dims, config.task_out_dims))
 
   tasks_model = globals()[config.task_model_type](config).to(get_device(config.cuda))
 

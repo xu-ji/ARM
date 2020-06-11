@@ -5,13 +5,11 @@ from code.data import *
 
 
 def get_data(config):
-  config.task_in_dims, config.task_out_dims = None, None
   dataloaders, datasets = globals()["get_%s_loaders" % config.data](config)
   num_train_samples = len(datasets[0])
   assert (num_train_samples % config.tasks_train_batch_sz) == 0
   config.batches_per_epoch = int(num_train_samples / config.tasks_train_batch_sz)
 
-  assert ((config.task_in_dims is not None) and (config.task_out_dims is not None))
   print("length of training d, test d, val d: %d %d %d, batches_per_epoch %d" %
         (num_train_samples, len(datasets[1]), len(datasets[2]), config.batches_per_epoch))
   assert (config.store_model_freq == config.batches_per_epoch)  # once per epoch
@@ -117,7 +115,6 @@ def get_miniimagenet_loaders(config):
 
 def get_mnist5k_loaders(config):
   assert (config.data == "mnist5k")
-  print((config.task_in_dims, config.task_out_dims))
   assert (config.task_in_dims == (28 * 28,))
   assert (config.task_out_dims == (10,))
 
