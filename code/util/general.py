@@ -19,13 +19,15 @@ def get_device(cuda):
 
 
 def store(config):
-  # todo remove
+  # todo anonymization
   data_path = config.data_path
   out_root = config.out_root
+  out_dir = config.out_dir
 
   config.data_path = ""
   config.out_root = ""
-  
+  config.out_dir = ""
+
   with open(osp.join(config.out_dir, "config.pickle"),
             'wb') as outfile:
     pickle.dump(config, outfile)
@@ -36,6 +38,7 @@ def store(config):
     
   config.data_path = data_path
   config.out_root = out_root
+  config.out_dir = out_dir
 
 
 def get_avg_grads(model):
