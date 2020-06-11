@@ -19,7 +19,7 @@ def get_device(cuda):
 
 
 def store(config):
-  # todo anonymization
+  # anonymization
   data_path = config.data_path
   out_root = config.out_root
   out_dir = config.out_dir
