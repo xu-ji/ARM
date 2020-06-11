@@ -117,6 +117,7 @@ def get_miniimagenet_loaders(config):
 
 def get_mnist5k_loaders(config):
   assert (config.data == "mnist5k")
+  print((config.task_in_dims, config.task_out_dims))
   assert (config.task_in_dims == (28 * 28,))
   assert (config.task_out_dims == (10,))
 
