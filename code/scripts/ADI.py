@@ -1,21 +1,14 @@
 import argparse
-import torch.optim as optim
-import torchvision
-import torchvision.transforms as transforms
-from torch.utils.data import DataLoader
-import os.path as osp
-import torch.nn.functional as F
-
 import os
-from datetime import datetime
-from code.util.data import *
-from code.util.general import *
-from code.util.eval import evaluate_basic
-from code.models import *
 from copy import deepcopy
-from code.util.render import render_aux_x
+from datetime import datetime
 
+import torch.optim as optim
+
+from code.util.eval import evaluate_basic
+from code.util.general import *
 from code.util.losses import *
+from code.util.render import render_aux_x
 
 # --------------------------------------------------------------------------------------------------
 # Settings
@@ -93,7 +86,7 @@ orig_config.add_argument("--L2_weight", type=float, default=1.0)
 
 orig_config.add_argument("--long_window", default=False, action="store_true")
 
-orig_config.add_argument("--long_window_range", type=int, nargs="+", default=[1, 1]) # inclusive
+orig_config.add_argument("--long_window_range", type=int, nargs="+", default=[1, 1])  # inclusive
 
 orig_config.add_argument("--use_fixed_window", default=False, action="store_true")
 
@@ -133,6 +126,7 @@ orig_config.add_argument("--render_aux_x_num", type=int, default=3)
 
 orig_config = orig_config.parse_args()
 
+
 def main(config):
   # ------------------------------------------------------------------------------------------------
   # Setup
@@ -144,7 +138,7 @@ def main(config):
 
   trainloader, testloader, valloader = get_data(config)
 
-  tasks_model = globals()[config.task_model_type](config).to(get_device(config.cuda)) # nn.Module
+  tasks_model = globals()[config.task_model_type](config).to(get_device(config.cuda))  # nn.Module
 
   if not osp.exists(config.out_dir):
     os.makedirs(config.out_dir)
@@ -156,10 +150,11 @@ def main(config):
   if config.long_window:
     old_tasks_model = None
     config.next_update_old_model_t_history = []
-    config.next_update_old_model_t = 0 # old model needs to be set in first timestep
-    assert(len(config.long_window_range) == 2)
+    config.next_update_old_model_t = 0  # old model needs to be set in first timestep
+    assert (len(config.long_window_range) == 2)
 
-  optimizer = optim.SGD(tasks_model.parameters(), lr=config.lr, momentum=0, dampening=0, weight_decay=0, nesterov=False)
+  optimizer = optim.SGD(tasks_model.parameters(), lr=config.lr, momentum=0, dampening=0,
+                        weight_decay=0, nesterov=False)
 
   refine_sample_metrics = []
   refine_theta_metrics = []
@@ -186,19 +181,23 @@ def main(config):
       # --------------------------------------------------------------------------------------------
 
       if (t - next_t) < 1000 or t % 100 == 0:
-        print("m %d t: %d %s, targets %s" % (config.model_ind, t, datetime.now(), str(list(present_classes.cpu().numpy()))))
+        print("m %d t: %d %s, targets %s" % (
+        config.model_ind, t, datetime.now(), str(list(present_classes.cpu().numpy()))))
         sys.stdout.flush()
 
-      save_dict = {"tasks_model": tasks_model, "t": t, "last_classes": last_classes, "seen_classes": seen_classes}
-      if config.long_window: # else no need to save because it's always the one just before current update
+      save_dict = {"tasks_model": tasks_model, "t": t, "last_classes": last_classes,
+                   "seen_classes": seen_classes}
+      if config.long_window:  # else no need to save because it's always the one just before
+        # current update
         save_dict["old_tasks_model"] = old_tasks_model
 
       last_step = t == (config.max_t)
-      if (t % config.eval_freq == 0) or (t % config.batches_per_epoch == 0) or last_step or (t == 0):
+      if (t % config.eval_freq == 0) or (t % config.batches_per_epoch == 0) or last_step or (
+        t == 0):
         evaluate_basic(config, tasks_model, valloader, t, is_val=True,
-                                   last_classes=last_classes, seen_classes=seen_classes)
+                       last_classes=last_classes, seen_classes=seen_classes)
         evaluate_basic(config, tasks_model, testloader, t, is_val=False,
-                           last_classes=last_classes, seen_classes=seen_classes)
+                       last_classes=last_classes, seen_classes=seen_classes)
 
       if (t % config.store_model_freq == 0) or last_step:
         torch.save(save_dict, osp.join(config.out_dir, "latest_models.pytorch"))
@@ -220,7 +219,7 @@ def main(config):
       ys = ys.to(get_device(config.cuda))
 
       curr_classes = ys.unique()
-      assert(curr_classes.max() < config.task_out_dims[0])
+      assert (curr_classes.max() < config.task_out_dims[0])
 
       optimizer.zero_grad()
 
@@ -234,7 +233,8 @@ def main(config):
           if config.use_fixed_window:
             window_offset = config.fixed_window
           else:
-            window_offset = np.random.randint(config.long_window_range[0], high=(config.long_window_range[1] + 1)) # randint is excl
+            window_offset = np.random.randint(config.long_window_range[0], high=(
+            config.long_window_range[1] + 1))  # randint is excl
 
           config.next_update_old_model_t = t + window_offset
 
@@ -260,10 +260,12 @@ def main(config):
         # pick classes for classes_loss
         num_classes = int(np.prod(config.task_out_dims))
         if not config.choose_past_classes:
-          classes_to_refine = torch.tensor(np.random.choice(num_classes, config.M, replace=(config.M > num_classes)),
-                                         dtype=torch.long, device=get_device(config.cuda))
+          classes_to_refine = torch.tensor(
+            np.random.choice(num_classes, config.M, replace=(config.M > num_classes)),
+            dtype=torch.long, device=get_device(config.cuda))
         else:
-          # Explicitly pick seen classes excluding present classes. There will be at least 2 bc recall from 2nd task
+          # Explicitly pick seen classes excluding present classes. There will be at least 2 bc
+          # recall from 2nd task
           seen_classes_excl_pres = seen_classes.clone()
           num_seen = seen_classes.shape[0]
           for c in present_classes:
@@ -271,7 +273,8 @@ def main(config):
           num_seen_excl_pres = seen_classes_excl_pres.shape[0]
 
           assert (num_seen_excl_pres <= num_seen)
-          chosen_inds = np.random.choice(num_seen_excl_pres, config.M, replace=(config.M > num_seen_excl_pres))
+          chosen_inds = np.random.choice(num_seen_excl_pres, config.M,
+                                         replace=(config.M > num_seen_excl_pres))
           classes_to_refine = seen_classes_excl_pres[chosen_inds]
 
         for r in range(config.refine_theta_steps):
@@ -318,7 +321,8 @@ def main(config):
             for metric in refine_sample_metrics:
               metrics[metric] += locals()[metric].item()
 
-            aux_x_grads = torch.autograd.grad(loss_refine, aux_x, only_inputs=True, retain_graph=False)[0]
+            aux_x_grads = \
+            torch.autograd.grad(loss_refine, aux_x, only_inputs=True, retain_graph=False)[0]
             aux_x = (aux_x - config.refine_sample_lr * aux_x_grads).detach().requires_grad_(True)
 
           aux_x.requires_grad_(False)
@@ -333,7 +337,6 @@ def main(config):
           if config.render_aux_x and t % config.render_aux_x_freq == 0:
             render_aux_x(config, t, r, aux_x_orig, aux_x, aux_y, present_classes)
 
-          # count number whose top class isn't in current classes
           aux_y_hard = aux_y.argmax(dim=1)
 
           if not hasattr(config, "aux_y_hard"):
@@ -347,9 +350,9 @@ def main(config):
             config.aux_y_probs = OrderedDict()
           aux_y_probs = F.softmax(aux_y, dim=1).mean(dim=0)
           if t not in config.aux_y_probs:
-            config.aux_y_probs[t] = aux_y_probs.cpu() * (1./ config.refine_theta_steps) # n c
+            config.aux_y_probs[t] = aux_y_probs.cpu() * (1. / config.refine_theta_steps)  # n c
           else:
-            config.aux_y_probs[t] += (aux_y_probs.cpu() * (1./ config.refine_theta_steps))
+            config.aux_y_probs[t] += (aux_y_probs.cpu() * (1. / config.refine_theta_steps))
 
           is_present_class = 0
           for c in present_classes:
@@ -404,6 +407,3 @@ if __name__ == "__main__":
     c.model_ind = m
     main(c)
     print("Done m %d" % m)
-
-
-
