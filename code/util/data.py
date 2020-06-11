@@ -19,8 +19,8 @@ def get_data(config):
 
 def get_cifar10_loaders(config):
   assert (config.data == "cifar10")
-  assert (config.task_in_dims == (3, 32, 32))
-  assert (config.task_out_dims == (10,))
+  config.task_in_dims = (3, 32, 32)
+  config.task_out_dims = (10,)
   two_classes_per_block = (config.classes_per_task == 2)
 
   train_fns = [transforms.ToTensor()]
@@ -61,8 +61,8 @@ def get_cifar10_loaders(config):
 
 def get_miniimagenet_loaders(config):
   assert (config.data == "miniimagenet")
-  assert (config.task_in_dims == (3, 84, 84))
-  assert (config.task_out_dims == (100,))
+  config.task_in_dims = (3, 84, 84)
+  config.task_out_dims = (100,)
 
   train_fns = [
     transforms.Resize(84),
@@ -115,8 +115,8 @@ def get_miniimagenet_loaders(config):
 
 def get_mnist5k_loaders(config):
   assert (config.data == "mnist5k")
-  assert (config.task_in_dims == (28 * 28,))
-  assert (config.task_out_dims == (10,))
+  config.task_in_dims = (28 * 28,)
+  config.task_out_dims = (10,)
 
   mnist5k_training = mnist5k(root=config.data_path, data_type="train",
                              non_stat=(not config.stationary), num_iterations=config.num_iterations,

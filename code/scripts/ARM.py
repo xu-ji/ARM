@@ -142,11 +142,7 @@ def main(config):
 
   config.out_dir = osp.join(config.out_root, str(config.model_ind))
 
-  set_task_dims(config)
-
-  tasks_model = globals()[config.task_model_type](config).to(get_device(config.cuda))
-
-  trainloader, testloader, valloader = get_data(config)
+  tasks_model, trainloader, testloader, valloader = get_model_and_data(config)
 
   if config.count_params_only:
     sz = 0
@@ -261,7 +257,7 @@ def main(config):
       optimizer.step()
 
       # --------------------------------------------------------------------------------------------
-      # Generate recalled data
+      # Generate recall
       # --------------------------------------------------------------------------------------------
 
       if t >= config.recall_from_t:

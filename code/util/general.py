@@ -10,6 +10,8 @@ import matplotlib.pyplot as plt
 from collections import OrderedDict
 from copy import deepcopy
 
+from .data import get_data
+
 
 def get_device(cuda):
   if cuda:
@@ -35,7 +37,7 @@ def store(config):
   with open(osp.join(out_dir, "config.txt"),
             "w") as text_file:
     text_file.write("%s" % config)
-    
+
   config.data_path = data_path
   config.out_root = out_root
   config.out_dir = out_dir
@@ -228,13 +230,13 @@ def trim_config(config, next_t):
     if isinstance(accs_storage, list):
       assert (isinstance(per_label_accs_storage, list))
       assert (len(accs_storage) >= (next_t) and len(per_label_accs_storage) >= (
-      next_t))  # at least next_t stored
+        next_t))  # at least next_t stored
 
       setattr(config, "%s_accs" % prefix, accs_storage[:next_t])
       setattr(config, "%s_per_label_accs" % prefix, per_label_accs_storage[:next_t])
     else:
       assert (
-      isinstance(accs_storage, OrderedDict) and isinstance(per_label_accs_storage, OrderedDict))
+        isinstance(accs_storage, OrderedDict) and isinstance(per_label_accs_storage, OrderedDict))
       for dn, d in [("accs", accs_storage), ("per_label_accs", per_label_accs_storage)]:
         d_copy = deepcopy(d)
         for k, v in d.items():
@@ -321,15 +323,13 @@ def make_valid_from_train(dataset, cut):
 
   return tr_ds, val_ds
 
-def set_task_dims(config):
-  if config.data == "cifar10":
-    config.task_in_dims = (3, 32, 32)
-    config.task_out_dims = (10,)
 
+def get_model_and_data(config):
   if config.data == "miniimagenet":
-    config.task_in_dims = (3, 84, 84)
-    config.task_out_dims = (100,)
+    tasks_model = globals()[config.task_model_type](config).to(get_device(config.cuda))
+    trainloader, testloader, valloader = get_data(config)
+  else:
+    trainloader, testloader, valloader = get_data(config)  # mnist needs data size fields set first
+    tasks_model = globals()[config.task_model_type](config).to(get_device(config.cuda))
 
-  if config.data == "mnist5k":
-    config.task_in_dims = (28 * 28,)
-    config.task_out_dims = (10,)
+  return tasks_model, trainloader, testloader, valloader
