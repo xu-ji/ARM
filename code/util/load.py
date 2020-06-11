@@ -1,5 +1,6 @@
 from .data import get_data
 from .general import get_device
+from code.models import *
 
 def get_model_and_data(config):
   if config.data == "miniimagenet":
