@@ -4,7 +4,6 @@ from collections import defaultdict
 
 import numpy as np
 from PIL import Image
-from code.util.check_data import *
 from torchvision.datasets.vision import VisionDataset
 
 from code.util.general import make_valid_from_train
@@ -72,7 +71,7 @@ class MiniImagenetDatasetFolder(VisionDataset):
     valid_label = [x + train_amt for x in valid_label]
     test_label = [x + train_amt + valid_amt for x in test_label]
 
-    all_data = np.array(train_data + valid_data + test_data)  # np array of strings!
+    all_data = np.array(train_data + valid_data + test_data)  # np array of strings
     all_label = np.array(train_label + valid_label + test_label)
 
     train_ds, test_ds = [], []

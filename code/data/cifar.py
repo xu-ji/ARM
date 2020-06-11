@@ -5,7 +5,6 @@ import sys
 
 import numpy as np
 from PIL import Image
-from code.util.check_data import *
 from torchvision.datasets.vision import VisionDataset
 
 from code.util.general import np_rand_seed
