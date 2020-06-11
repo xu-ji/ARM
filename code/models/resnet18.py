@@ -3,8 +3,6 @@ import torch.nn as nn
 
 # Consistent with https://github.com/optimass/Maximally_Interfered_Retrieval
 
-__all__ = ["resnet18"]
-
 
 class BasicBlock(nn.Module):
   """Basic Block for resnet 18 and resnet 34
