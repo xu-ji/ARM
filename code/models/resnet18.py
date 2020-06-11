@@ -196,7 +196,8 @@ class resnet18(ResNet):
     if config.data == "miniimagenet":  # 4 pool is only different to avgpool for large enough images
       num_classes = 100
       linear_sz = 160 * 2 * 2
-    else:
+    elif config.data == "cifar10" or config.data == "mnist5k":
+      num_classes = 10
       linear_sz = 160 * 1 * 1
 
     super(resnet18, self).__init__(BasicBlock, [2, 2, 2, 2], num_classes=num_classes,
