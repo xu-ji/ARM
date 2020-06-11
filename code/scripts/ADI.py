@@ -7,6 +7,7 @@ import torch.optim as optim
 
 from code.util.eval import evaluate_basic
 from code.util.general import *
+from code.util.load import *
 from code.util.losses import *
 from code.util.render import render_aux_x
 
@@ -136,9 +137,7 @@ def main(config):
 
   config.out_dir = osp.join(config.out_root, str(config.model_ind))
 
-  trainloader, testloader, valloader = get_data(config)
-
-  tasks_model = globals()[config.task_model_type](config).to(get_device(config.cuda))  # nn.Module
+  tasks_model, trainloader, testloader, valloader = get_model_and_data(config)
 
   if not osp.exists(config.out_dir):
     os.makedirs(config.out_dir)
