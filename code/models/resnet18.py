@@ -259,28 +259,10 @@ class resnet18_batch_stats(resnet18):
       return x
 
 
-# --------------------------------------------------------------------------------------------------
-# Legacy class names, will be removed
-# --------------------------------------------------------------------------------------------------
-
-class cifar10_resnet18(resnet18):
-  def __init__(self, config):
-    super(cifar10_resnet18, self).__init__(config)
-
-
-class cifar10_resnet18_feat20(resnet18):
-  def __init__(self, config):
-    super(cifar10_resnet18_feat20, self).__init__(config)
-
 
 class aljundi_resnet(resnet18):
   def __init__(self, config):
     super(aljundi_resnet, self).__init__(config)
-
-
-class cifar10_resnet18_feat20_batch_stats(resnet18_batch_stats):
-  def __init__(self, config):
-    super(cifar10_resnet18_feat20_batch_stats, self).__init__(config)
 
 
 class aljundi_resnet_batch_stats(resnet18_batch_stats):
