@@ -103,6 +103,9 @@ class ResNet(nn.Module):
                                     batchnorm_mom=self.batchnorm_mom,
                                     batchnorm_dont_track=batchnorm_dont_track)
 
+    if self.num_classes == 10: # cifar10
+      self.avg_pool = nn.AdaptiveAvgPool2d((1, 1))
+
     self.fc1 = nn.Linear(linear_sz, self.num_classes)
 
     if init:  # else default, which is uniform
@@ -162,7 +165,10 @@ class ResNet(nn.Module):
     x = self.conv4_x(x)
     x = self.conv5_x(x)
 
-    x = nn.functional.avg_pool2d(x, 4)
+    if self.num_classes == 10:
+      x = self.avg_pool(x)
+    else:
+      x = nn.functional.avg_pool2d(x, 4)
     x = x.view(x.size(0), -1)
 
     return self.fc1(x)
@@ -196,7 +202,7 @@ class resnet18(ResNet):
     if config.data == "miniimagenet":  # 4 pool is only different to avgpool for large enough images
       num_classes = 100
       linear_sz = 160 * 2 * 2
-    elif config.data == "cifar10" or config.data == "mnist5k":
+    elif config.data == "cifar10":
       num_classes = 10
       linear_sz = 160 * 1 * 1
 
@@ -232,7 +238,10 @@ class resnet18_batch_stats(resnet18):
     x = self.conv4_x(x)
     x = self.conv5_x(x)
 
-    x = nn.functional.avg_pool2d(x, 4)
+    if self.num_classes == 10:
+      x = self.avg_pool(x)
+    else:
+      x = nn.functional.avg_pool2d(x, 4)
     x = x.view(x.size(0), -1)
 
     x = self.fc1(x)
