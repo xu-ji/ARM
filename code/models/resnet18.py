@@ -257,14 +257,3 @@ class resnet18_batch_stats(resnet18):
       return x, torch.mean(torch.stack(batch_stats_losses))
     else:
       return x
-
-
-
-class aljundi_resnet(resnet18):
-  def __init__(self, config):
-    super(aljundi_resnet, self).__init__(config)
-
-
-class aljundi_resnet_batch_stats(resnet18_batch_stats):
-  def __init__(self, config):
-    super(aljundi_resnet_batch_stats, self).__init__(config)
