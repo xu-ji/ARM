@@ -14,12 +14,13 @@ from code.util.general import make_valid_from_train
 class mnist5k(VisionDataset):
   train_val_pc = 0.95
 
-  def __init__(self, root, data_type=None, non_stat=False, num_iterations=None):
+  def __init__(self, root, data_type=None, non_stat=False, num_iterations=None, classes_per_task=None):
     super(mnist5k, self).__init__(root, transform=None, target_transform=None)
 
     self.data_type = data_type
     self.non_stat = non_stat
-    self.classes_per_task = 2
+    self.classes_per_task = classes_per_task
+    assert(self.classes_per_task == 2)
     self.num_classes = 10
     self.orig_train_samples_per_class = 500
 

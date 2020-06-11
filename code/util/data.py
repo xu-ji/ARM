@@ -121,7 +121,8 @@ def get_mnist5k_loaders(config):
   config.task_out_dims = (10,)
 
   mnist5k_training = mnist5k(root=config.data_path, data_type="train",
-                             non_stat=(not config.stationary), num_iterations=config.num_iterations)
+                             non_stat=(not config.stationary), num_iterations=config.num_iterations,
+                             classes_per_task=config.classes_per_task)
 
   if not config.stationary:
     mnist5k_training_loader = DataLoader(mnist5k_training,
@@ -134,11 +135,11 @@ def get_mnist5k_loaders(config):
   evals_non_stat = False
 
   mnist5k_val = mnist5k(root=config.data_path, data_type="val", non_stat=evals_non_stat,
-                        num_iterations=1)
+                        num_iterations=1, classes_per_task=config.classes_per_task)
   mnist5k_val_loader = DataLoader(mnist5k_val, shuffle=False, batch_size=config.tasks_eval_batch_sz)
 
   mnist5k_test = mnist5k(root=config.data_path, data_type="test", non_stat=evals_non_stat,
-                         num_iterations=1)
+                         num_iterations=1, classes_per_task=config.classes_per_task)
   mnist5k_test_loader = DataLoader(mnist5k_test, shuffle=False,
                                    batch_size=config.tasks_eval_batch_sz)
 
