@@ -1,4 +1,4 @@
-from .resnet18 import resnet18, resnet18_batch_stats
+from .resnet18 import resnet18, resnet18_batch_stats, BasicBlock
 
 # todo: legacy class names are now empty wrappers, remove for final version
 
