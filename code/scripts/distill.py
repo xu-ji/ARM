@@ -164,14 +164,11 @@ def main(config):
 
         if config.long_window:
           config.next_update_old_model_t_history.append(config.next_update_old_model_t)
-          if config.long_window_use_unit_lag and (t < config.long_window_use_unit_lag_until_t):
-            window_offset = 1
+          if config.use_fixed_window:
+            window_offset = config.fixed_window
           else:
-            if config.use_fixed_window:
-              window_offset = config.fixed_window
-            else:
-              window_offset = np.random.randint(config.long_window_range[0],
-                                                high=(config.long_window_range[1] + 1))
+            window_offset = np.random.randint(config.long_window_range[0],
+                                              high=(config.long_window_range[1] + 1))
 
           config.next_update_old_model_t = t + window_offset
 
