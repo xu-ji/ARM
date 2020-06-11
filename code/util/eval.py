@@ -5,8 +5,7 @@ import torch
 
 from code.util.general import get_device
 
-
-# Assumes same number of classes for each task
+# Assumes same number of classes per task
 
 def evaluate_basic(config, tasks_model, data_loader, t, is_val, last_classes=None,
                    seen_classes=None,
