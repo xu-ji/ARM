@@ -12,11 +12,6 @@ class cifar10_resnet18_feat20(resnet18):
     super(cifar10_resnet18_feat20, self).__init__(config)
 
 
-class cifar100_resnet34(resnet18):
-  def __init__(self, config):
-    super(cifar100_resnet34, self).__init__(config)
-
-
 class cifar10_resnet18_feat20_batch_stats(resnet18_batch_stats):
   def __init__(self, config):
     super(cifar10_resnet18_feat20_batch_stats, self).__init__(config)
