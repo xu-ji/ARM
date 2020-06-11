@@ -79,8 +79,7 @@ def compute_forgetting(config, t, all_per_label_acc, last_classes, seen_classes)
 
   all_per_label_acc = np.array(all_per_label_acc)
   assert (t % config.eval_freq == 0)
-  num_post_0_evals_so_far = int(
-    t / config.eval_freq)  # t = 1000, freq = 100, just done 10 evals incl this one
+  num_post_0_evals_so_far = int(t / config.eval_freq)
 
   num_out = int(np.prod(config.task_out_dims))
   assert (all_per_label_acc.shape == (num_post_0_evals_so_far, num_out))
