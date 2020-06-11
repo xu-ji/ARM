@@ -334,3 +334,5 @@ def set_task_dims(config):
     print("setting mnist sz")
     config.task_in_dims = (28 * 28,)
     config.task_out_dims = (10,)
+
+  print((config.task_in_dims, config.task_out_dims))
