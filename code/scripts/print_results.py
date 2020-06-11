@@ -71,8 +71,9 @@ def print_results(args):
         std = np.array(ms_avg[prefix][metric]).std()
         ms_avg[prefix][metric] = (avg, std)
 
-    print("average %s: acc %.4f, forgetting %.4f" % (
-    prefix, ms_avg[prefix]["acc"], ms_avg[prefix]["forgetting"]))
+    print("average %s: acc %.4f +- %.4f, forgetting %.4f +- %.4f" % (
+    prefix, ms_avg[prefix]["acc"][0], ms_avg[prefix]["acc"][1],
+    ms_avg[prefix]["forgetting"][0], ms_avg[prefix]["forgetting"][1]))
 
 
 if __name__ == "__main__":
