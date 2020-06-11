@@ -1,6 +1,6 @@
 from .resnet18 import resnet18, resnet18_batch_stats
 
-# todo: legacy class names are now empty wrappers, remove for final version
+# todo: legacy class names are empty wrappers, remove for final version
 
 class cifar10_resnet18(resnet18):
   def __init__(self, config):

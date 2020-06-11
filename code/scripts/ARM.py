@@ -110,15 +110,15 @@ orig_config.add_argument("--opt_batch_stats_weight", type=float, default=1.0)
 
 orig_config.add_argument("--cuda", default=False, action="store_true")
 
-orig_config.add_argument("--specific_torch_seed", default=False, action="store_true")
-
-orig_config.add_argument("--torch_seed", type=int)
-
 orig_config.add_argument("--eval_freq", type=int, required=True)
 
 orig_config.add_argument("--store_results_freq", type=int, required=True)
 
 orig_config.add_argument("--store_model_freq", type=int, required=True)
+
+orig_config.add_argument("--specific_torch_seed", default=False, action="store_true")
+
+orig_config.add_argument("--torch_seed", type=int)
 
 orig_config.add_argument("--render_aux_x", default=False, action="store_true")
 
