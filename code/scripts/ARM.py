@@ -5,6 +5,7 @@ import os
 
 import torch.optim as optim
 
+from code.models import *
 from code.util.data import *
 from code.util.eval import evaluate_basic
 from code.util.general import *
