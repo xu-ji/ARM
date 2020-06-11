@@ -260,9 +260,15 @@ class resnet18_batch_stats(resnet18):
     else:
       return x
 
+
 # --------------------------------------------------------------------------------------------------
 # Legacy class names, will be removed
 # --------------------------------------------------------------------------------------------------
+
+class cifar10_resnet18(resnet18):
+  def __init__(self, config):
+    super(cifar10_resnet18, self).__init__(config)
+
 
 class cifar10_resnet18_feat20(resnet18):
   def __init__(self, config):
