@@ -27,7 +27,6 @@ def print_results(args):
             "test": {"acc": [], "forgetting": [], "acc_binary": [], "forgetting_binary": []}}
 
   for m in range(args.start, args.start + args.num_runs):
-    print("---")
     out_dir = os.path.join(args.root, str(m))
     config_p = os.path.join(out_dir, "config.pickle")
 
