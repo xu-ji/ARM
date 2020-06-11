@@ -199,7 +199,7 @@ def _batch_stats_hook(b, input):
 
 class resnet18(ResNet):
   def __init__(self, config):
-    if config.data == "miniimagenet":  # 4 pool is only different to avgpool for large enough images
+    if config.data == "miniimagenet":  # 4 pool is only different to avgpool for large images
       num_classes = 100
       linear_sz = 160 * 2 * 2
     elif config.data == "cifar10":

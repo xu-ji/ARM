@@ -142,7 +142,8 @@ def main(config):
 
   config.out_dir = osp.join(config.out_root, str(config.model_ind))
 
-  # model first
+  set_task_dims(config)
+
   tasks_model = globals()[config.task_model_type](config).to(get_device(config.cuda))
 
   trainloader, testloader, valloader = get_data(config)

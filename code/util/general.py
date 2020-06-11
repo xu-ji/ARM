@@ -320,3 +320,16 @@ def make_valid_from_train(dataset, cut):
     val_ds += [(x_val, y_val)]
 
   return tr_ds, val_ds
+
+def set_task_dims(config):
+  if config.data == "cifar10":
+    config.task_in_dims = (3, 32, 32)
+    config.task_out_dims = (10,)
+
+  if config.data == "miniimagenet":
+    config.task_in_dims = (3, 84, 84)
+    config.task_out_dims = (100,)
+
+  if config.data == "mnist5k":
+    config.task_in_dims = (28 * 28,)
+    config.task_out_dims = (10,)
