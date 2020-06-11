@@ -109,11 +109,11 @@ orig_config.add_argument("--no_classes_loss", default=False, action="store_true"
 
 orig_config.add_argument("--cuda", default=False, action="store_true")
 
-orig_config.add_argument("--eval_freq", type=int, default=76)
+orig_config.add_argument("--eval_freq", type=int, required=True)
 
-orig_config.add_argument("--store_results_freq", type=int, default=76)
+orig_config.add_argument("--store_results_freq", type=int, required=True)
 
-orig_config.add_argument("--store_model_freq", type=int, default=380)
+orig_config.add_argument("--store_model_freq", type=int, required=True)
 
 orig_config.add_argument("--specific_torch_seed", default=False, action="store_true")
 

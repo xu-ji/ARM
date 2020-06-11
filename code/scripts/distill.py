@@ -20,14 +20,13 @@ orig_config.add_argument("--model_ind_start", type=int, required=True)
 
 orig_config.add_argument("--num_runs", type=int, required=True)
 
-orig_config.add_argument("--out_root", type=str, default="/scratch/shared/nfs1/xuji/iam")
+orig_config.add_argument("--out_root", type=str, required=True)
 
 # Data and model
 
 orig_config.add_argument("--data", type=str, default="cifar100")
 
-orig_config.add_argument("--data_path", type=str,
-                         default="/scratch/shared/nfs1/xuji/datasets/CIFAR")
+orig_config.add_argument("--data_path", type=str, required=True)
 
 orig_config.add_argument("--stationary", default=False, action="store_true")
 
@@ -63,11 +62,11 @@ orig_config.add_argument("--aux_distill_weight", type=float, default=1.0)
 
 orig_config.add_argument("--cuda", default=False, action="store_true")
 
-orig_config.add_argument("--eval_freq", type=int, default=76)
+orig_config.add_argument("--eval_freq", type=int, required=True)
 
-orig_config.add_argument("--store_results_freq", type=int, default=76)
+orig_config.add_argument("--store_results_freq", type=int, required=True)
 
-orig_config.add_argument("--store_model_freq", type=int, default=380)
+orig_config.add_argument("--store_model_freq", type=int, required=True)
 
 orig_config.add_argument("--specific_torch_seed", default=False, action="store_true")
 
