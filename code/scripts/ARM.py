@@ -75,13 +75,13 @@ orig_config.add_argument("--sharpen_class", default=False, action="store_true")
 
 orig_config.add_argument("--sharpen_class_weight", type=float, default=1.0)  # lambda_4
 
-orig_config.add_argument("--TV", default=False, action="store_true")
-
-orig_config.add_argument("--TV_weight", type=float, default=1.0)  # lambda_5
-
 orig_config.add_argument("--L2", default=False, action="store_true")
 
-orig_config.add_argument("--L2_weight", type=float, default=1.0)  # lambda_6
+orig_config.add_argument("--L2_weight", type=float, default=1.0)  # lambda_5
+
+orig_config.add_argument("--TV", default=False, action="store_true")
+
+orig_config.add_argument("--TV_weight", type=float, default=1.0)  # lambda_6
 
 orig_config.add_argument("--long_window", default=False, action="store_true")
 
