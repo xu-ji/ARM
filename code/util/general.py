@@ -320,3 +320,11 @@ def make_valid_from_train(dataset, cut):
     val_ds += [(x_val, y_val)]
 
   return tr_ds, val_ds
+
+
+def invert_dict(dict_to_invert):
+  new_dict = {}
+  for k, vs in dict_to_invert.items():
+    for v in vs:
+      new_dict[v] = k
+  return new_dict
