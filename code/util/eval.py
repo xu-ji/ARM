@@ -122,11 +122,12 @@ def compute_forgetting(config, t, per_task_accs, last_classes):
   for task_i in range(last_task_i):  # excl last (tasks are numbered chronologically)
     best_acc = None
     for past_t in per_task_accs:
-      if past_t == 0: continue
+      if past_t == 0: continue # not used
       if past_t == t: continue
 
-      if best_acc is None or per_task_accs[past_t][task_i] > best_acc:
-        best_acc = per_task_accs[past_t][task_i]
+      if task_i in per_task_accs[past_t]:
+        if best_acc is None or per_task_accs[past_t][task_i] > best_acc:
+          best_acc = per_task_accs[past_t][task_i]
     assert (best_acc is not None)
 
     forgetting_per_task[task_i] = best_acc - per_task_accs[t][task_i]
