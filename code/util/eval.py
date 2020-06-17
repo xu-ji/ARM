@@ -24,9 +24,6 @@ def evaluate_basic(config, tasks_model, data_loader, t, is_val, last_classes=Non
 
   tasks_model.eval()
 
-  last_classes = last_classes.cpu().numpy()
-  seen_classes = seen_classes.cpu().numpy()
-
   acc_data = 0.
   counts = 0
 
@@ -61,6 +58,9 @@ def evaluate_basic(config, tasks_model, data_loader, t, is_val, last_classes=Non
   # acc per seen task and avg
   acc = None
   if hasattr(config, "%s_accs_data"):  # not pre training
+    last_classes = last_classes.cpu().numpy()
+    seen_classes = seen_classes.cpu().numpy()
+
     per_task_acc = defaultdict(list)
     for c in seen_classes:  # seen tasks only
       per_task_acc[config.class_dict_tasks[c]].append(per_label_acc[c])
