@@ -65,13 +65,16 @@ def evaluate_basic(config, tasks_model, data_loader, t, is_val, last_classes=Non
     for c in seen_classes:  # seen tasks only
       per_task_acc[config.class_dict_tasks[c]].append(per_label_acc[c])
 
-    seen_tasks = [task_i for task_i in per_task_acc if len(per_task_acc[task_i]) > 0]
+    #seen_tasks = [task_i for task_i in per_task_acc if len(per_task_acc[task_i]) > 0]
     acc = 0.
-    for task_i in seen_tasks:
+    for task_i in per_task_acc:
       assert (len(per_task_acc[task_i]) == config.classes_per_task)
       per_task_acc[task_i] = np.array(per_task_acc[task_i]).mean()
       acc += per_task_acc[task_i]
     acc /= len(per_task_acc)
+
+    print(per_task_acc)
+    assert(False)
 
   if not hasattr(config, "%s_accs" % prefix):
     setattr(config, "%s_accs_data" % prefix, OrderedDict())
