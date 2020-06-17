@@ -91,8 +91,7 @@ def evaluate_basic(config, tasks_model, data_loader, t, is_val, last_classes=Non
     getattr(config, "%s_accs" % prefix)[t] = acc
 
     print(getattr(config, "%s_per_task_accs" % prefix))
-    assert (False)
-
+    
   # for all previous (excl latest) tasks, find the maximum drop to curr acc
   if compute_forgetting_metric:
     if len(getattr(config, "%s_accs_data" % prefix)) >= 3:  # at least 1 previous (non pre training) eval
