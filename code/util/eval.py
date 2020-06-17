@@ -57,7 +57,7 @@ def evaluate_basic(config, tasks_model, data_loader, t, is_val, last_classes=Non
 
   # acc per seen task and avg
   acc = None
-  if hasattr(config, "%s_accs_data"):  # not pre training
+  if hasattr(config, "%s_accs_data" % prefix):  # not pre training
     last_classes = last_classes.cpu().numpy()
     seen_classes = seen_classes.cpu().numpy()
 
@@ -89,8 +89,7 @@ def evaluate_basic(config, tasks_model, data_loader, t, is_val, last_classes=Non
 
   # for all previous (excl latest) tasks, find the maximum drop to curr acc
   if compute_forgetting_metric:
-    if len(
-      getattr(config, "%s_accs_data" % prefix)) >= 3:  # at least 1 previous (non pre training) eval
+    if len(getattr(config, "%s_accs_data" % prefix)) >= 3:  # at least 1 previous (non pre training) eval
       assert (last_classes is not None)
       getattr(config, "%s_forgetting" % prefix)[t] = compute_forgetting(config, t,
                                                                         getattr(config,
