@@ -74,7 +74,6 @@ def evaluate_basic(config, tasks_model, data_loader, t, is_val, last_classes=Non
     acc /= len(per_task_acc)
 
     print(per_task_acc)
-    assert(False)
 
   if not hasattr(config, "%s_accs" % prefix):
     setattr(config, "%s_accs_data" % prefix, OrderedDict())
@@ -90,6 +89,9 @@ def evaluate_basic(config, tasks_model, data_loader, t, is_val, last_classes=Non
   if acc is not None:
     getattr(config, "%s_per_task_accs" % prefix)[t] = per_task_acc
     getattr(config, "%s_accs" % prefix)[t] = acc
+
+    print(getattr(config, "%s_per_task_accs" % prefix))
+    assert (False)
 
   # for all previous (excl latest) tasks, find the maximum drop to curr acc
   if compute_forgetting_metric:
