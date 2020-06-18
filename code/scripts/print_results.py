@@ -23,8 +23,8 @@ def treat_underscores(x):
 
 
 def print_results(args):
-  ms_avg = {"val": {"acc": [], "forgetting": [], "acc_binary": [], "forgetting_binary": []},
-            "test": {"acc": [], "forgetting": [], "acc_binary": [], "forgetting_binary": []}}
+  ms_avg = {"val": {"acc": [], "forgetting": []},
+            "test": {"acc": [], "forgetting": []}}
 
   for m in range(args.start, args.start + args.num_runs):
     out_dir = os.path.join(args.root, str(m))

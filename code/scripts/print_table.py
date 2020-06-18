@@ -38,13 +38,13 @@ experiments = [
 
 num_runs = 5
 
-ms_avg = {"val": {"acc": [], "forgetting": [], "acc_binary": [], "forgetting_binary": []},
-            "test": {"acc": [], "forgetting": [], "acc_binary": [], "forgetting_binary": []}}
-
 print("& \multicolumn{2}{c}{Val} & \multicolumn{2}{c}{Test} \\\\")
 print("& acc & forgetting & acc & forgetting \\\\")
 print("\midrule")
 for name, m_start in experiments:
+  ms_avg = {"val": {"acc": [], "forgetting": []},
+            "test": {"acc": [], "forgetting": []}}
+
   counts = 0
   for m in range(m_start, m_start + args.num_runs):
     out_dir = os.path.join(args.root, str(m))
