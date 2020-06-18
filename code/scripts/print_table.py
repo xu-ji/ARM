@@ -39,7 +39,7 @@ experiments = [
 num_runs = 5
 
 print("& \multicolumn{2}{c}{Val} & \multicolumn{2}{c}{Test} \\\\")
-print("& acc & forgetting & acc & forgetting \\\\")
+print("& Accuracy & Forgetting & Accuracy & Forgetting \\\\")
 print("\midrule")
 for name, m_start in experiments:
   ms_avg = {"val": {"acc": [], "forgetting": []},
