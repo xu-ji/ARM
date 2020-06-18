@@ -64,6 +64,10 @@ for name, m_start in experiments:
       continue
 
     actual_t = config.max_t
+
+    if not actual_t in config.test_accs:
+      continue
+    
     for prefix in ["val", "test"]:
       accs_dict = getattr(config, "%s_accs" % prefix)
 
