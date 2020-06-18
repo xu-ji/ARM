@@ -45,7 +45,7 @@ print("& \multicolumn{2}{c}{Val} & \multicolumn{2}{c}{Test} \\\\")
 print("& acc & forgetting & acc & forgetting \\\\")
 print("\midrule")
 for name, m_start in experiments:
-
+  counts = 0
   for m in range(m_start, m_start + args.num_runs):
     out_dir = os.path.join(args.root, str(m))
     config_p = os.path.join(out_dir, "config.pickle")
@@ -67,7 +67,7 @@ for name, m_start in experiments:
 
     if not actual_t in config.test_accs:
       continue
-    
+
     for prefix in ["val", "test"]:
       accs_dict = getattr(config, "%s_accs" % prefix)
 
@@ -76,6 +76,8 @@ for name, m_start in experiments:
       forgetting_dict = getattr(config, "%s_forgetting" % prefix)
       if actual_t in forgetting_dict:
         ms_avg[prefix]["forgetting"].append(forgetting_dict[actual_t])
+
+    counts += 1
 
   for prefix in ["val", "test"]:
     for metric in ["acc", "forgetting"]:
@@ -86,8 +88,8 @@ for name, m_start in experiments:
         std = np.array(ms_avg[prefix][metric]).std()
         ms_avg[prefix][metric] = (avg, std)
 
-  print("%s & %.4f $\pm$ %.4f & %.4f $\pm$ %.4f & %.4f $\pm$ %.4f & %.4f $\pm$ %.4f \\\\" %
-        (name,
+  print("%s (%d) & %.4f $\pm$ %.4f & %.4f $\pm$ %.4f & %.4f $\pm$ %.4f & %.4f $\pm$ %.4f \\\\" %
+        (name, counts,
 
          ms_avg["val"]["acc"][0], ms_avg["val"]["acc"][1],
          ms_avg["val"]["forgetting"][0], ms_avg["val"]["forgetting"][1],
