@@ -34,6 +34,21 @@ experiments = [
   ("ARM Cifar10, no distill", 2717),
 
   # table 7
+  ("\lambda_1 = 0, \lambda_2 = 0", 3982),
+  ("\lambda_3 = 0", 6562),
+  ("\lambda_3 = 1", 3697),
+  ("\lambda_4 = 0", 3977),
+  ("\lambda_5 = 0", 3967),
+  ("\lambda_6 = 0", 3972),
+  ("M = 150 (+50)", 6478),
+  ("M = 50 (-50)", 5922),
+  ("S = 20 (doubled)", 3957),
+  ("S = 5 (halved)", 3962),
+  ("Cross-entropy as D", 3617),
+  ("Random noise init", 4077),
+  ("Recall 2x per t", 6502),
+  ("Recall 4x per t", 6507),
+  ("\lambda_3 = 32", 6557),
 ]
 
 num_runs = 5
