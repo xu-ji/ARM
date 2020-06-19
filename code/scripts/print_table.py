@@ -54,14 +54,14 @@ experiments = [
 num_runs = 5
 
 print("LaTeX table:")
-print("\begin{table}[h]")
-print("\centering")
-print("\fontsize{7}{7}\selectfont")
-print("\begin{tabular}{l c c c c}")
-print("\toprule")
-print("& \multicolumn{2}{c}{Val} & \multicolumn{2}{c}{Test} \\\\")
+print("\\begin{table}[h]")
+print("\\centering")
+print("\\fontsize{7}{7}\\selectfont")
+print("\\begin{tabular}{l c c c c}")
+print("\\toprule")
+print("& \\multicolumn{2}{c}{Val} & \\multicolumn{2}{c}{Test} \\\\")
 print("& Accuracy & Forgetting & Accuracy & Forgetting \\\\")
-print("\midrule")
+print("\\midrule")
 for name, m_start in experiments:
   ms_avg = {"val": {"acc": [], "forgetting": []},
             "test": {"acc": [], "forgetting": []}}
@@ -119,6 +119,6 @@ for name, m_start in experiments:
          ms_avg["test"]["forgetting"][0], ms_avg["test"]["forgetting"][1],
          ))
 
-print("\bottomrule")
-print("\end{tabular}")
-print("\end{table}")
+print("\\bottomrule")
+print("\\end{tabular}")
+print("\\end{table}")
