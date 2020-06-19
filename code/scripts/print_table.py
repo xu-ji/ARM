@@ -53,7 +53,7 @@ experiments = [
 
 num_runs = 5
 
-
+print("LaTeX table:")
 print("\begin{table}[h]")
 print("\centering")
 print("\fontsize{7}{7}\selectfont")
