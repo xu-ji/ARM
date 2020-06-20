@@ -103,6 +103,9 @@ class ResNet(nn.Module):
 
     if self.num_classes == 10: # cifar10, legacy code
       self.avg_pool = nn.AdaptiveAvgPool2d((1, 1))
+    else:
+      assert(self.num_classes == 100) # todo remove
+      self.avg_pool = nn.AdaptiveAvgPool2d((2, 2))
 
     self.fc1 = nn.Linear(linear_sz, self.num_classes)
 
@@ -165,15 +168,15 @@ class ResNet(nn.Module):
     x = self.conv4_x(x)
     x = self.conv5_x(x)
 
-    if x.requires_grad:
-      pool1 = self.avg_pool(x)
-      pool2 = nn.functional.avg_pool2d(x, 4)
-      print("diff: %.8f, %.8f" % ((pool1.mean() - pool2.mean()).item(), (pool1.max() - pool2.max()).item()))
+    # todo revert?
+    """
+    if self.num_classes == 10:
+      x = self.avg_pool(x)
+    else:
+      x = nn.functional.avg_pool2d(x, 4)
+    """
+    x = self.avg_pool(x)
 
-    #if self.num_classes == 10:
-    #  x = self.avg_pool(x)
-    #else:
-    x = nn.functional.avg_pool2d(x, 4)
     x = x.view(x.size(0), -1)
 
     return self.fc1(x)
