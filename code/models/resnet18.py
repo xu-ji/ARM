@@ -168,7 +168,7 @@ class ResNet(nn.Module):
     #if self.num_classes == 10:
     #  x = self.avg_pool(x)
     #else:
-    x = nn.functional.avg_pool2d(x, 4)
+    x = nn.functional.avg_pool2d(x, 4) # TODO
     x = x.view(x.size(0), -1)
 
     return self.fc1(x)
