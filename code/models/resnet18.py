@@ -168,9 +168,6 @@ class ResNet(nn.Module):
     x = self.conv4_x(x)
     x = self.conv5_x(x)
 
-    print(x.shape)
-    assert(False)
-
     # todo revert?
     """
     if self.num_classes == 10:
