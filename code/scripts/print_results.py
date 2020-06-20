@@ -48,16 +48,21 @@ def print_results(args):
 
     actual_t = config.max_t
     for prefix in ["val", "test"]:
-      accs_dict = getattr(config, "%s_accs" % prefix)
+      if not config.stationary:
+        accs_dict = getattr(config, "%s_accs" % prefix)
 
-      ms_avg[prefix]["acc"].append(accs_dict[actual_t])
+        ms_avg[prefix]["acc"].append(accs_dict[actual_t])
 
-      forgetting_dict = getattr(config, "%s_forgetting" % prefix)
-      if actual_t in forgetting_dict:
-        ms_avg[prefix]["forgetting"].append(forgetting_dict[actual_t])
+        forgetting_dict = getattr(config, "%s_forgetting" % prefix)
+        if actual_t in forgetting_dict:
+          ms_avg[prefix]["forgetting"].append(forgetting_dict[actual_t])
 
-      print("model %d, %s: acc %.4f, forgetting %.4f" % (
-      config.model_ind, prefix, accs_dict[actual_t], forgetting_dict[actual_t]))
+        print("model %d, %s: acc %.4f, forgetting %.4f" % (
+        config.model_ind, prefix, accs_dict[actual_t], forgetting_dict[actual_t]))
+      else:
+        accs_dict = getattr(config, "%s_accs_data" % prefix)
+        ms_avg[prefix]["acc"].append(accs_dict[actual_t])
+        print("model %d, %s: acc %.4f" % (config.model_ind, prefix, accs_dict[actual_t]))
 
     print("---")
 

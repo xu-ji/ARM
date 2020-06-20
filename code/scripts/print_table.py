@@ -26,6 +26,10 @@ experiments = [
   ("Naive Cifar10", 2522),
   ("Naive MiniImageNet", 4557),
 
+  ("Naive stationary MNIST", 4947),
+  ("Naive stationary Cifar10", 6462),
+  ("Naive stationary MiniImageNet", 4527),
+
   # table 4
   ("Distill Cifar10, unit lag", 6452),
   ("ADI Cifar10, unit lag", 6467),
@@ -98,13 +102,17 @@ for name, m_start in experiments:
       continue
 
     for prefix in ["val", "test"]:
-      accs_dict = getattr(config, "%s_accs" % prefix)
+      if not config.stationary:
+        accs_dict = getattr(config, "%s_accs" % prefix)
 
-      ms_avg[prefix]["acc"].append(accs_dict[actual_t])
+        ms_avg[prefix]["acc"].append(accs_dict[actual_t])
 
-      forgetting_dict = getattr(config, "%s_forgetting" % prefix)
-      if actual_t in forgetting_dict:
-        ms_avg[prefix]["forgetting"].append(forgetting_dict[actual_t])
+        forgetting_dict = getattr(config, "%s_forgetting" % prefix)
+        if actual_t in forgetting_dict:
+          ms_avg[prefix]["forgetting"].append(forgetting_dict[actual_t])
+      else:
+        accs_dict = getattr(config, "%s_accs_data" % prefix)
+        ms_avg[prefix]["acc"].append(accs_dict[actual_t])
 
     counts += 1
 
