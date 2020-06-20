@@ -13,8 +13,7 @@ from code.util.general import get_device
 # forgetting: average over all seen tasks
 
 def evaluate_basic(config, tasks_model, data_loader, t, is_val, last_classes=None,
-                   seen_classes=None,
-                   compute_forgetting_metric=True, tag=""):
+                   seen_classes=None, tag=""):
   if is_val:
     prefix = "val"
   else:
@@ -57,7 +56,7 @@ def evaluate_basic(config, tasks_model, data_loader, t, is_val, last_classes=Non
 
   # acc per seen task and avg
   acc = None
-  if hasattr(config, "%s_accs_data" % prefix):  # not pre training
+  if hasattr(config, "%s_accs_data" % prefix) and (not config.stationary): # start from after training starts
     last_classes = last_classes.cpu().numpy()
     seen_classes = seen_classes.cpu().numpy()
 
@@ -65,7 +64,6 @@ def evaluate_basic(config, tasks_model, data_loader, t, is_val, last_classes=Non
     for c in seen_classes:  # seen tasks only
       per_task_acc[config.class_dict_tasks[c]].append(per_label_acc[c])
 
-    #seen_tasks = [task_i for task_i in per_task_acc if len(per_task_acc[task_i]) > 0]
     acc = 0.
     for task_i in per_task_acc:
       assert (len(per_task_acc[task_i]) == config.classes_per_task)
@@ -89,7 +87,7 @@ def evaluate_basic(config, tasks_model, data_loader, t, is_val, last_classes=Non
     getattr(config, "%s_accs" % prefix)[t] = acc
 
   # for all previous (excl latest) tasks, find the maximum drop to curr acc
-  if compute_forgetting_metric:
+  if not config.stationary:
     if len(getattr(config, "%s_accs_data" % prefix)) >= 3:  # at least 1 previous (non pre training) eval
       assert (last_classes is not None)
       getattr(config, "%s_forgetting" % prefix)[t] = compute_forgetting(config, t,
