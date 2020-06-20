@@ -171,7 +171,6 @@ class ResNet(nn.Module):
     pool2 = nn.functional.avg_pool2d(x, 4)
     print(pool1.shape, pool1.mean(), pool1.max(), pool1.min())
     print(pool2.shape, pool2.mean(), pool2.max(), pool2.min())
-    assert(False)
 
     if self.num_classes == 10:
       x = self.avg_pool(x)
