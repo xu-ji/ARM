@@ -165,10 +165,10 @@ class ResNet(nn.Module):
     x = self.conv4_x(x)
     x = self.conv5_x(x)
 
-    #if self.num_classes == 10:
-    #  x = self.avg_pool(x)
-    #else:
-    x = nn.functional.avg_pool2d(x, 4) # TODO
+    if self.num_classes == 10:
+      x = self.avg_pool(x)
+    else:
+      x = nn.functional.avg_pool2d(x, 4)
     x = x.view(x.size(0), -1)
 
     return self.fc1(x)

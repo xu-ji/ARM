@@ -53,7 +53,7 @@ experiments = [
 
 num_runs = 5
 
-hard_results = {}
+hard_results = {} # TODO remove
 hard_results["ARM Cifar10"] = \
   {"val": {"acc": [0.2586, 0.0145], "forgetting": [0.1046, 0.0330]},
   "test": {"acc": [0.2687, 0.0107], "forgetting": [0.0959, 0.0371]}}
