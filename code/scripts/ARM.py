@@ -322,9 +322,6 @@ def main(config):
             torch.autograd.grad(loss_refine, aux_x, only_inputs=True, retain_graph=False)[0]
             aux_x = (aux_x - config.refine_sample_lr * aux_x_grads).detach().requires_grad_(True)
 
-            print(aux_x.shape, aux_x.mean().item(), aux_x.max().item(), aux_x.min().item())
-            assert(False)
-
           # Get final predictions on recalled data from old model
           aux_x.requires_grad_(False)
           with torch.no_grad():
