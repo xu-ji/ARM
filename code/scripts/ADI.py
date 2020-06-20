@@ -194,9 +194,11 @@ def main(config):
       if (t % config.eval_freq == 0) or (t % config.batches_per_epoch == 0) or last_step or (
         t == 0):
         evaluate_basic(config, tasks_model, valloader, t, is_val=True,
-                       last_classes=last_classes, seen_classes=seen_classes)
+                       last_classes=last_classes, seen_classes=seen_classes,
+                       compute_forgetting_metric=(not config.stationary))
         evaluate_basic(config, tasks_model, testloader, t, is_val=False,
-                       last_classes=last_classes, seen_classes=seen_classes)
+                       last_classes=last_classes, seen_classes=seen_classes,
+                       compute_forgetting_metric=(not config.stationary))
 
       if (t % config.store_model_freq == 0) or last_step:
         torch.save(save_dict, osp.join(config.out_dir, "latest_models.pytorch"))
