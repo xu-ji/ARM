@@ -170,10 +170,10 @@ class ResNet(nn.Module):
       pool2 = nn.functional.avg_pool2d(x, 4)
       print("diff: %.8f, %.8f" % ((pool1.mean() - pool2.mean()).item(), (pool1.max() - pool2.max()).item()))
 
-    if self.num_classes == 10:
-      x = self.avg_pool(x)
-    else:
-      x = nn.functional.avg_pool2d(x, 4)
+    #if self.num_classes == 10:
+    #  x = self.avg_pool(x)
+    #else:
+    x = nn.functional.avg_pool2d(x, 4)
     x = x.view(x.size(0), -1)
 
     return self.fc1(x)
