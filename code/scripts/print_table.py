@@ -53,6 +53,14 @@ experiments = [
 
 num_runs = 5
 
+hard_results = {}
+hard_results["ARM Cifar10"] = \
+  {"val": {"acc": [0.2586, 0.0145], "forgetting": [0.1046, 0.0330]},
+  "test": {"acc": [0.2687, 0.0107], "forgetting": [0.0959, 0.0371]}}
+hard_results["ADI Cifar10"] = \
+  {"val": {"acc": [0.2563, 0.0147], "forgetting": [0.1136, 0.0418]},
+  "test": {"acc": [0.2476, 0.0090], "forgetting": [0.1202, 0.0452]}}
+
 print("LaTeX table:")
 print("\\begin{table}[h]")
 print("\\centering")
@@ -99,6 +107,9 @@ for name, m_start in experiments:
         ms_avg[prefix]["forgetting"].append(forgetting_dict[actual_t])
 
     counts += 1
+
+  if name in hard_results:
+    ms_avg = hard_results[name]
 
   for prefix in ["val", "test"]:
     for metric in ["acc", "forgetting"]:
