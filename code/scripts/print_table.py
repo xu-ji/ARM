@@ -108,9 +108,6 @@ for name, m_start in experiments:
 
     counts += 1
 
-  if name in hard_results:
-    ms_avg = hard_results[name]
-
   for prefix in ["val", "test"]:
     for metric in ["acc", "forgetting"]:
       if len(ms_avg[prefix][metric]) == 0:
@@ -119,6 +116,9 @@ for name, m_start in experiments:
         avg = np.array(ms_avg[prefix][metric]).mean()
         std = np.array(ms_avg[prefix][metric]).std()
         ms_avg[prefix][metric] = (avg, std)
+
+  if name in hard_results:
+    ms_avg = hard_results[name]
 
   print("%s (%d) & %.4f $\pm$ %.4f & %.4f $\pm$ %.4f & %.4f $\pm$ %.4f & %.4f $\pm$ %.4f \\\\" %
         (name, counts,
