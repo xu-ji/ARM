@@ -40,7 +40,6 @@ experiments = [
   # table 7
   ("$\lambda_1 = 0, \lambda_2 = 0$", 3982),
   ("$\lambda_3 = 0$", 6562),
-  ("$\lambda_3 = 1$", 3697),
   ("$\lambda_4 = 0$", 3977),
   ("$\lambda_5 = 0$", 3967),
   ("$\lambda_6 = 0$", 3972),
@@ -52,18 +51,9 @@ experiments = [
   ("Random noise init", 4077),
   ("Recall 2x per t", 6502),
   ("Recall 4x per t", 6507),
-  ("$\lambda_3 = 32$", 6557),
 ]
 
 num_runs = 5
-
-hard_results = {} # TODO remove
-hard_results["ARM Cifar10"] = \
-  {"val": {"acc": [0.2586, 0.0145], "forgetting": [0.1046, 0.0330]},
-  "test": {"acc": [0.2687, 0.0107], "forgetting": [0.0959, 0.0371]}}
-hard_results["ADI Cifar10"] = \
-  {"val": {"acc": [0.2563, 0.0147], "forgetting": [0.1136, 0.0418]},
-  "test": {"acc": [0.2476, 0.0090], "forgetting": [0.1202, 0.0452]}}
 
 print("LaTeX table:")
 print("\\begin{table}[h]")
@@ -124,9 +114,6 @@ for name, m_start in experiments:
         avg = np.array(ms_avg[prefix][metric]).mean()
         std = np.array(ms_avg[prefix][metric]).std()
         ms_avg[prefix][metric] = (avg, std)
-
-  if name in hard_results:
-    ms_avg = hard_results[name]
 
   print("%s (%d) & %.4f $\pm$ %.4f & %.4f $\pm$ %.4f & %.4f $\pm$ %.4f & %.4f $\pm$ %.4f \\\\" %
         (name, counts,
