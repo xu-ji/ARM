@@ -1,6 +1,7 @@
 # ------------------------------------------
-To print result summary after running commands:
+To print results summary after running commands:
 # ------------------------------------------
+Experiments are named by arbitrary integers for easy reference.
 
 E.g. ARM CIFAR10
   python -m code.scripts.print_results --root /scratch/shared/nfs1/xuji/ARM --start 3717
@@ -13,7 +14,7 @@ Print all results:
 
 
 # ------------------------------------------
-Commands - key results
+Tables 1 - 3
 # ------------------------------------------
 
 ARM
@@ -68,7 +69,7 @@ Naive stationary
   nohup python -m code.scripts.naive --model_ind_start 4527 --num_runs 5 --data miniimagenet --classes_per_task 5 --stationary --lr 0.1 --task_model_type resnet18 --num_iterations 3 --max_t 13680 --store_model_freq 13680 --store_results_freq 684 --eval_freq 684 --cuda --out_root /scratch/shared/nfs1/xuji/ARM --data_path /scratch/shared/nfs1/xuji/datasets/MINIIMAGENET/ > out/m4527s.out &
 
 # ------------------------------------------
-Commands - table 4
+Table 4
 # ------------------------------------------
 
 Distill unit lag
@@ -87,7 +88,7 @@ ARM no distill
   nohup python -m code.scripts.ARM --model_ind_start 2717 --num_runs 5 --data cifar10 --lr 0.01 --task_model_type resnet18 --classes_per_task 2 --recall_from_t 950 --num_iterations 1 --M 100 --refine_sample_steps 10 --refine_sample_lr 10.0 --divergence_loss_weight 1.0 --L2 --L2_weight 1.0 --TV --TV_weight 1.0 --long_window --use_fixed_window --fixed_window 950 --sharpen_class --sharpen_class_weight 1.0 --notlocal_weight 1.0 --notlocal_new_weight 0.1 --diversity_weight 16.0 --max_t 4750 --store_model_freq 4750 --store_results_freq 950 --eval_freq 950 --cuda --out_root /scratch/shared/nfs1/xuji/ARM --data_path /scratch/shared/nfs1/xuji/datasets/CIFAR > out/m2717s.out &
 
 # ------------------------------------------
-Commands - table 7
+Table 7
 # ------------------------------------------
 
 \lambda_1 = 0, \lambda_2 = 0
@@ -120,7 +121,7 @@ S = 5 (halved)
 Cross-entropy as D
   nohup python -m code.scripts.ARM --model_ind_start 3617 --num_runs 5 --data cifar10 --lr 0.01 --task_model_type resnet18 --classes_per_task 2 --recall_from_t 950 --num_iterations 1 --M 100 --refine_sample_steps 10 --refine_sample_lr 10.0 --divergence_loss_weight 1.0 --L2 --L2_weight 1.0 --TV --TV_weight 1.0 --long_window --use_fixed_window --fixed_window 950 --sharpen_class --sharpen_class_weight 0.1 --notlocal_weight 1.0 --notlocal_new_weight 0.1 --diversity_weight 16.0 --aux_distill --aux_distill_weight 1.0 --use_crossent_as_D --max_t 4750 --store_model_freq 4750 --store_results_freq 950 --eval_freq 950 --cuda --out_root /scratch/shared/nfs1/xuji/ARM --data_path /scratch/shared/nfs1/xuji/datasets/CIFAR > out/m3617s.out &
 
-Random noise init
+Random noise init \mathcal{\hat{B}}_X
   nohup python -m code.scripts.ARM --model_ind_start 4077 --num_runs 5 --data cifar10 --lr 0.01 --task_model_type resnet18 --classes_per_task 2 --recall_from_t 950 --num_iterations 1 --M 100 --refine_sample_steps 10 --refine_sample_lr 10.0 --divergence_loss_weight 1.0 --L2 --L2_weight 1.0 --TV --TV_weight 1.0 --long_window --use_fixed_window --fixed_window 950 --sharpen_class --sharpen_class_weight 0.1 --notlocal_weight 1.0 --notlocal_new_weight 0.1 --diversity_weight 16.0 --aux_x_random --aux_distill --aux_distill_weight 1.0 --max_t 4750 --store_model_freq 4750 --store_results_freq 950 --eval_freq 950 --cuda --out_root /scratch/shared/nfs1/xuji/ARM --data_path /scratch/shared/nfs1/xuji/datasets/CIFAR > out/m4077s.out &
 
 Recall 2x per t
