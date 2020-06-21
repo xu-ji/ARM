@@ -18,7 +18,6 @@ Tables 1 - 3
 # ------------------------------------------
 
 ARM
-
   MNIST
   nohup python -m code.scripts.ARM --model_ind_start 6579 --num_runs 5 --data mnist5k --lr 0.05 --task_model_type mlp  --classes_per_task 2 --recall_from_t 100 --num_iterations 1 --M 10 --refine_sample_steps 10 --refine_sample_lr 25.0 --divergence_loss_weight 1.0 --L2 --L2_weight 1.0 --TV --TV_weight 1.0 --long_window --use_fixed_window --fixed_window 100 --sharpen_class --sharpen_class_weight 0.1 --notlocal_weight 1.0 --notlocal_new_weight 0.1 --diversity_weight 16.0 --aux_distill --aux_distill_weight 1.0 --max_t 500 --store_model_freq 500 --store_results_freq 100 --eval_freq 100 --cuda --out_root /scratch/shared/nfs1/xuji/ARM --data_path /scratch/shared/nfs1/xuji/datasets/ > out/m6579s.out &
 
