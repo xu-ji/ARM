@@ -166,9 +166,9 @@ class ResNet(nn.Module):
     x = self.conv5_x(x)
 
     if self.num_classes == 10:
-      x = self.avg_pool(x) # 1x1, as Aljundi
+      x = self.avg_pool(x) # 1x1 (as Aljundi)
     else:
-      x = nn.functional.avg_pool2d(x, 4) # 2x2, as Aljundi
+      x = nn.functional.avg_pool2d(x, 4) # 2x2 (as Aljundi)
 
     x = x.view(x.size(0), -1)
 
@@ -200,7 +200,7 @@ def _batch_stats_hook(b, input):
 
 class resnet18(ResNet):
   def __init__(self, config):
-    # 4 pool is only different to avgpool for large images. Newer resnet code uses avgpool but Aljundi code uses 4 pool.
+    # Newer resnet code uses avgpool but Aljundi code uses 4 pool.
     if config.data == "miniimagenet":
       num_classes = 100
       linear_sz = 160 * 2 * 2
