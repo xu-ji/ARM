@@ -101,11 +101,8 @@ class ResNet(nn.Module):
                                     batchnorm_mom=self.batchnorm_mom,
                                     batchnorm_dont_track=batchnorm_dont_track)
 
-    if self.num_classes == 10: # cifar10, legacy code
+    if self.num_classes == 10:
       self.avg_pool = nn.AdaptiveAvgPool2d((1, 1))
-    else:
-      assert(self.num_classes == 100) # todo remove
-      self.avg_pool = nn.AdaptiveAvgPool2d((2, 2))
 
     self.fc1 = nn.Linear(linear_sz, self.num_classes)
 
@@ -168,14 +165,10 @@ class ResNet(nn.Module):
     x = self.conv4_x(x)
     x = self.conv5_x(x)
 
-    # todo revert?
-    """
     if self.num_classes == 10:
-      x = self.avg_pool(x)
+      x = self.avg_pool(x) # 1x1, as Aljundi
     else:
-      x = nn.functional.avg_pool2d(x, 4)
-    """
-    x = self.avg_pool(x)
+      x = nn.functional.avg_pool2d(x, 4) # 2x2, as Aljundi
 
     x = x.view(x.size(0), -1)
 
@@ -207,7 +200,7 @@ def _batch_stats_hook(b, input):
 
 class resnet18(ResNet):
   def __init__(self, config):
-    # 4 pool is only different to avgpool for large images. Newer resnet code uses avgpool but Aljundi uses 4 pool.
+    # 4 pool is only different to avgpool for large images. Newer resnet code uses avgpool but Aljundi code uses 4 pool.
     if config.data == "miniimagenet":
       num_classes = 100
       linear_sz = 160 * 2 * 2
