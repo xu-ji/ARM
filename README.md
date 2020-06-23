@@ -1,6 +1,6 @@
 # Automatic Recall Machines
 
-This repository accompanies the paper: <a href="">Automatic Recall Machines: Internal Replay, Continual Learning and the Brain</a>.
+This repository accompanies the paper: <a href="https://arxiv.org/abs/2006.12323">Automatic Recall Machines: Internal Replay, Continual Learning and the Brain</a>.
 
 # Dependencies
 
