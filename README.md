@@ -2,7 +2,7 @@
 
 This repository contains the code for <a href="https://arxiv.org/abs/2006.12323">Automatic Recall Machines: Internal Replay, Continual Learning and the Brain</a>.
 
-<img src="https://github.com/xu-ji/ARM/blob/master/swans.png" alt="ARM" height=300>
+<img src="https://github.com/xu-ji/ARM/blob/master/swans.png" alt="ARM" height=250>
 
 As well as ARM, we include implementations of Adaptive DeepInversion and LwF-style distillation.
 
