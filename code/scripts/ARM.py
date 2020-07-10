@@ -371,8 +371,9 @@ def main(config):
           final_loss_aux = loss_aux * config.aux_weight
 
           if config.aux_distill:
-            loss_aux_distill = F.kl_div(F.log_softmax(tasks_model(xs), dim=1),
-                                        F.softmax(distill_xs_targets, dim=1), reduction="batchmean")
+            loss_aux_distill = crossent_logits(tasks_model(xs), distill_xs_targets)
+            #loss_aux_distill = F.kl_div(F.log_softmax(tasks_model(xs), dim=1),
+            #                            F.softmax(distill_xs_targets, dim=1), reduction="batchmean")
             final_loss_aux += config.aux_distill_weight * loss_aux_distill
             metrics["loss_aux_distill"] += loss_aux_distill.item()
 
