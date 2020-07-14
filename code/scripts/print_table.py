@@ -34,7 +34,7 @@ experiments = [
   ("Distill Cifar10, unit lag", 6452),
   ("ADI Cifar10, unit lag", 6467),
   ("ADI Cifar10, no distill", 2327),
-  ("ARM Cifar10, unit lag", 4127),
+  ("ARM Cifar10, unit lag", 6602),
   ("ARM Cifar10, no distill", 2717),
 
   # table 7
@@ -43,7 +43,7 @@ experiments = [
   ("$\lambda_4 = 0$", 3977),
   ("$\lambda_5 = 0$", 3967),
   ("$\lambda_6 = 0$", 3972),
-  ("$M = 150$ (+50)", 6478),
+  ("$M = 150$ (+50)", 6624),
   ("$M = 50$ (-50)", 5922),
   ("$S = 20$ (doubled)", 3957),
   ("$S = 5$ (halved)", 3962),
